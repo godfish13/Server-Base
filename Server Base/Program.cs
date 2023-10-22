@@ -8,6 +8,9 @@ namespace Server_Base
 {
     internal class FileName
     {
+        static void Main(string[] args)
+        {
 
+        }
     }
 }
