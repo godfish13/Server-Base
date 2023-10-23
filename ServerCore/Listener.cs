@@ -48,8 +48,8 @@ namespace ServerCore
         {
             if (args.SocketError == SocketError.Success)    // 에러없이 잘 됐을 경우
             {
-                _onAcceptHandler.Invoke(args.AcceptSocket); // Socket이 Accept했다는 이벤트 받았다
-            }
+                _onAcceptHandler.Invoke(args.AcceptSocket); // AcceptSocket : 비동기 소켓 수락작업을 할 떄 수락이 완료되면 수락된 연결을 나타냄
+            }    // 지금 접속한 소켓은 AcceptSocket이다 라고 _onAcceptHandler에 전달, Program의 OnAcceptHandler에 clientSocket으로 전달되고 작업 진행
             else
                 Console.WriteLine(args.SocketError.ToString());
 

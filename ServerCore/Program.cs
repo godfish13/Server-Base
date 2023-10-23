@@ -22,11 +22,11 @@ namespace Server_Base
                 byte[] receiveBuffer = new byte[1024];
                 int receiveByte = clientSocket.Receive(receiveBuffer);  // clientSocket에서 받은 데이터 receiveBuffer에 저장
                 string receiveData = Encoding.UTF8.GetString(receiveBuffer, 0, receiveByte); // (문자열, 문자열이 시작되는 index, 문자의 갯수)
-                Console.WriteLine($"[From Clien] : {receiveData}");            // 서버상 보내려면 인코딩 맞춰야함 여기선 UTF8 사용
+                Console.WriteLine($"[From Client] : {receiveData}");            // 서버상 보내려면 인코딩 맞춰야함 여기선 UTF8 사용
 
                 // 보낸다
-                byte[] senfBuff = Encoding.UTF8.GetBytes("Welcome to MMO RPG Server!!");
-                clientSocket.Send(senfBuff);
+                byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to MMO RPG Server!!");
+                clientSocket.Send(sendBuff);
 
                 // 손님 내보낸다
                 clientSocket.Shutdown(SocketShutdown.Both); // 양쪽 모두 서로 대화 나눌것 없다고 공지
