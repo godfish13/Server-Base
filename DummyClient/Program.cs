@@ -31,8 +31,12 @@ namespace Server_Base
                     Console.WriteLine($"Connected to {socket.RemoteEndPoint.ToString()}");  // 연결된 상대방쪽 주소
 
                     // 보낸다
-                    byte[] SendBuff = Encoding.UTF8.GetBytes("Hello World!");
-                    int SendByte = socket.Send(SendBuff);
+                    for(int i = 0; i < 5; i++)
+                    {
+                        byte[] SendBuff = Encoding.UTF8.GetBytes($"Hello World! : {i}");                       
+                        int SendByte = socket.Send(SendBuff);
+                        //Thread.Sleep(10);
+                    }
 
                     // 받는다
                     byte[] recvBuff = new byte[1024];

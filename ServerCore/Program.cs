@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Server_Base
 {
-    internal class FileName
+    internal class Program
     {
         static Listener _listener = new Listener();
 
@@ -18,7 +18,13 @@ namespace Server_Base
         {
             try
             {
-                // 받는다
+                // 문지기고용
+                /*socket.Connect(endPoint);
+                Console.WriteLine($"Connected to {socket.RemoteEndPoint.ToString()}");  // 연결된 상대방쪽 주소*/
+                //Listener class로 분리
+
+                // 받기 보내기 대화종료
+                /*// 받는다
                 byte[] receiveBuffer = new byte[1024];
                 int receiveByte = clientSocket.Receive(receiveBuffer);  // clientSocket에서 받은 데이터 receiveBuffer에 저장
                 string receiveData = Encoding.UTF8.GetString(receiveBuffer, 0, receiveByte); // (문자열, 문자열이 시작되는 index, 문자의 갯수)
@@ -30,7 +36,19 @@ namespace Server_Base
 
                 // 손님 내보낸다
                 clientSocket.Shutdown(SocketShutdown.Both); // 양쪽 모두 서로 대화 나눌것 없다고 공지
-                clientSocket.Close();     // 대화끝
+                clientSocket.Close();     // 대화끝*/
+                // Session class로 분리
+
+                Session session = new Session();
+                session.Start(clientSocket);
+
+                byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to MMO RPG Server!!");
+                session.Send(sendBuff);
+
+                Thread.Sleep(1000);
+
+                session.DisConnect();
+
             }
             catch (Exception e)
             {

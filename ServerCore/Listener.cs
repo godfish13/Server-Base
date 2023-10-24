@@ -26,12 +26,14 @@ namespace ServerCore
             // 영업 시작
             _listenSocket.Listen(10);    // backlog == 최대 대기 수
 
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs(); // 한번 new해두면 계속 재활용 가능
-            args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted); // args.Completed이벤트에 OnAcceptCompleted 콜백 연동
-                                                                                        // == args.Completed가 발생할때마다 OnAcceptCompleted 콜백시킴
-                                     // RegisterAccept 내의 pending == true면 여기서 OnAcceptCompleted, false면 RegisterAccept내부에서 OnAcceptCompleted실행
-            
-            RegisterAccept(args);   // 최초 초기화에선 수동으로 등록               
+            for (int i = 0; i < 10; i++)    // 한번에 여러개 돌리고 싶을 경우(문지기 여러명이 필요할 경우) 여러개를 만들어 돌리면 됨
+            {
+                SocketAsyncEventArgs args = new SocketAsyncEventArgs(); // 한번 new해두면 계속 재활용 가능
+                args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted); // args.Completed이벤트에 OnAcceptCompleted 콜백 연동
+                // == args.Completed가 발생할때마다 OnAcceptCompleted 콜백시킴  // SocketAsyncEventArgs 덕분에 멀티 스레드 환경에서 구동됨 조심해야함!
+                // RegisterAccept 내의 pending == true면 여기서 OnAcceptCompleted, false면 RegisterAccept내부에서 OnAcceptCompleted실행          
+                RegisterAccept(args);   // 최초 초기화에선 수동으로 등록 
+            }                       
         }
 
         // 이하 Register와 OnAccept를 계속 반복하게 됨
@@ -44,7 +46,7 @@ namespace ServerCore
                 OnAcceptCompleted(null, args);
         }
 
-        void OnAcceptCompleted(Object sender, SocketAsyncEventArgs args)
+        void OnAcceptCompleted(Object sender, SocketAsyncEventArgs args)    // 멀티스레드 환경에서 실행되므로 조심해서 다뤄야 함!
         {
             if (args.SocketError == SocketError.Success)    // 에러없이 잘 됐을 경우
             {
