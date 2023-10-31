@@ -11,7 +11,12 @@ namespace ServerCore
     {
         Socket _socket;
         int _disconnected = 0;
-        
+
+        object _lock = new object();
+        Queue<byte[]> _sendQueue = new Queue<byte[]>();
+        bool _pending = false;  // RegisterSending 한번 하면 pending = true로 Queue에 모으기 실행, completed되면 false로 바꿔주도록
+        SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();    // 재활용 용이하게하기위해 멤버변수로 미리 선언
+
         public void Start(Socket socket)
         {
             _socket = socket;
@@ -19,13 +24,27 @@ namespace ServerCore
             recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);            
             recvArgs.SetBuffer(new byte[1024], 0, 1024);    // (버퍼, 버퍼시작점, 버퍼의 사이즈)
 
+            _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
+
             RegisterReceive(recvArgs);
         }
 
-        public void Send(byte[] sendBuff)
+        /*public void Send(byte[] sendBuff)   // 매번 sendBuff를 등록하는 방식
         {
-            _socket.Send(sendBuff);
-        }
+            //_socket.Send(sendBuff);   비동기없이 그냥 실행하던 구버전       
+            _sendArgs.SetBuffer(sendBuff, 0, sendBuff.Length);
+            RegisterSend();
+        }*/
+
+        public void Send(byte[] sendBuff)   // sendBuff를 queue에 모아서 보내는 방식
+        {
+            lock (_lock)
+            {
+                _sendQueue.Enqueue(sendBuff);   
+                if (_pending == false)  // RegisterSend내에서 SendAsync가 지연중인데 또다른 Send신호가 오면 _pending == true인 상태라 후자는 RegisterSend를 못함
+                    RegisterSend();     // 이를 방지하기 위해 OnSendCompleted의 try문 내에서 _sendQueue.Count > 0인 경우에 RegisterSend 한번 더 해줌
+            }          
+        }   
 
         public void DisConnect()
         {
@@ -36,7 +55,44 @@ namespace ServerCore
             _socket.Close();
         }
 
-        #region 네트워크 통신 receive
+        #region 네트워크 통신 send, receive   
+
+        void RegisterSend() // Send에 의해서만 호출되므로 이미 lock이 걸린 내부에서만 동작 => 따로 lock 안걸어줌
+        {
+            _pending = true;
+            byte[] buff = _sendQueue.Dequeue();
+            _sendArgs.SetBuffer(buff, 0, buff.Length);
+
+            bool pending = _socket.SendAsync(_sendArgs);
+            if (pending == false)
+                OnSendCompleted(null, _sendArgs);
+        }
+
+        void OnSendCompleted(object sender, SocketAsyncEventArgs args)  // RegisterSend 외에 이벤트 콜백에 의해 멀티스레드 상태로 호출될 수 있으므로 lock 걸어줌
+        {
+            lock (_lock)
+            {
+                if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
+                {
+                    try
+                    {
+                        if (_sendQueue.Count > 0)   // Send()에 주석으로 달아둔 오류 해결 위해 RegisterSend해줌
+                            RegisterSend();
+                        else
+                            _pending = false;     // sendQueue가 비어있는 경우 _pending = false                  
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"OnSendComplete Failed : {e}");
+                    }
+                }
+                else
+                {
+                    DisConnect();
+                }
+            }
+        }
+
         void RegisterReceive(SocketAsyncEventArgs args)
         {
             bool pending = _socket.ReceiveAsync(args);
@@ -57,14 +113,14 @@ namespace ServerCore
                 catch (Exception e) 
                 {
                     Console.WriteLine($"OnReceiveComplete Failed : {e}");
-                }
-                
+                }               
             }
             else
             {
-
+                DisConnect();
             }
         }
+
         #endregion
     }
 }
