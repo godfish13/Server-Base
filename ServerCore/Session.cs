@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    internal class Session
+    abstract class Session  // Engine파트, 실 기능은 Program에서 상속하여 구현
     {
         Socket _socket;
         int _disconnected = 0;
@@ -20,6 +21,11 @@ namespace ServerCore
         SocketAsyncEventArgs _recvArgs = new SocketAsyncEventArgs();
         SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();    // 재활용 용이하게하기위해 멤버변수로 미리 선언
 
+        // Program에서 Session을 상속하여 사용할 때 만들 인터페이스
+        public abstract void OnConnected(EndPoint endPoint);      
+        public abstract void OnReceive(ArraySegment<byte> buffer);
+        public abstract void OnSend(int numOfbytes);
+        public abstract void OnDisConnected(EndPoint endPoint); // DisConnect시 작동할 기능
 
         public void Start(Socket socket)
         {
@@ -56,6 +62,7 @@ namespace ServerCore
             if (Interlocked.Exchange(ref _disconnected, 1) == 1)    // 이미 disconnect된 상태면 return
                 return;
 
+            OnDisConnected(_socket.RemoteEndPoint);
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
         }
@@ -91,12 +98,12 @@ namespace ServerCore
                         _sendArgs.BufferList = null;
                         _pendinglist.Clear();
 
+                        OnSend(_sendArgs.BytesTransferred);
+
                         if (_sendQueue.Count > 0)   // Send()에 주석으로 달아둔 오류 해결 위해 RegisterSend해줌
                             RegisterSend();
-
-                        Console.WriteLine($"Transferred args byte : {_sendArgs.BytesTransferred}");
-
-                        //else
+                      
+                        //else  // pending사용 안하고 _pendingList.Count이용하므로 제거
                         //    _pending = false;     // sendQueue가 비어있는 경우 _pending = false                  
                     }
                     catch (Exception e)
@@ -124,8 +131,9 @@ namespace ServerCore
             {
                 try
                 {
-                    string receiveData = Encoding.UTF8.GetString(args.Buffer, args.Offset, args.BytesTransferred); // init에서 SetBuffer로 설정한 값 추출하는 args 변수들
-                    Console.WriteLine($"[From Client] : {receiveData}");
+                    OnReceive(new ArraySegment<byte>(args.Buffer, args.Offset, args.BytesTransferred));
+                    /*string receiveData = Encoding.UTF8.GetString(args.Buffer, args.Offset, args.BytesTransferred); // init에서 SetBuffer로 설정한 값 추출하는 args 변수들
+                    Console.WriteLine($"[From Client] : {receiveData}")*/   // Program의 OnReceive에 구현(이동)
                     RegisterReceive();
                 }
                 catch (Exception e) 
