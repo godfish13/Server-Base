@@ -13,7 +13,6 @@ namespace ServerCore
     class Listener  // 문지기
     {
         Socket _listenSocket;
-        //Action<Socket> _onAcceptHandler;  // 어떤 Session이 들어와질지 모르므로 sessionFactory로 변경
         Func<Session> _sessionFactory;
 
         public void init(IPEndPoint endPoint, Func<Session> sessionFactory)
@@ -55,8 +54,6 @@ namespace ServerCore
                 Session session = _sessionFactory.Invoke();
                 session.Start(args.AcceptSocket);
                 session.OnConnected(args.AcceptSocket.RemoteEndPoint);
-                //_onAcceptHandler.Invoke(args.AcceptSocket); // AcceptSocket : 비동기 소켓 수락작업을 할 떄 수락이 완료되면 수락된 연결을 나타냄
-                // Invoke대신 OnConnected() 실행으로 변경
             }    // 지금 접속한 소켓은 AcceptSocket이다 라고 _onAcceptHandler에 전달, Program의 OnAcceptHandler에 clientSocket으로 전달되고 작업 진행
             else
                 Console.WriteLine(args.SocketError.ToString());
