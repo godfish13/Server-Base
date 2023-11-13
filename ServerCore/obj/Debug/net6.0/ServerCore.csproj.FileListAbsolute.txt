@@ -2,13 +2,10 @@ C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.GeneratedMSBu
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfoInputs.cache
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.AssemblyInfo.cs
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.csproj.CoreCompileInputs.cache
-C:\Unity_Server\Server Base\ServerCore\bin\Debug\net6.0\ServerCore.exe
 C:\Unity_Server\Server Base\ServerCore\bin\Debug\net6.0\ServerCore.deps.json
-C:\Unity_Server\Server Base\ServerCore\bin\Debug\net6.0\ServerCore.runtimeconfig.json
 C:\Unity_Server\Server Base\ServerCore\bin\Debug\net6.0\ServerCore.dll
 C:\Unity_Server\Server Base\ServerCore\bin\Debug\net6.0\ServerCore.pdb
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.dll
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\refint\ServerCore.dll
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.pdb
-C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.genruntimeconfig.cache
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll

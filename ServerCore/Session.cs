@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    abstract class Session  // Engine파트, 실 기능은 Program에서 상속하여 구현
+    public abstract class Session  // Engine파트, 실 기능은 Program에서 상속하여 구현
     {
         Socket _socket;
         int _disconnected = 0;

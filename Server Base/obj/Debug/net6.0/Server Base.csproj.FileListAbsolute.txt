@@ -1,0 +1,18 @@
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.csproj.AssemblyReference.cache
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.GeneratedMSBuildEditorConfig.editorconfig
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.AssemblyInfoInputs.cache
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.AssemblyInfo.cs
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.csproj.CoreCompileInputs.cache
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.exe
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.deps.json
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.runtimeconfig.json
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.dll
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.pdb
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\ServerCore.dll
+C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\ServerCore.pdb
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.csproj.CopyComplete
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.dll
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\refint\Server Base.dll
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.pdb
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.genruntimeconfig.cache
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\ref\Server Base.dll

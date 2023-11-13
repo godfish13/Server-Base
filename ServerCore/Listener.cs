@@ -1,5 +1,4 @@
-﻿using Server_Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    class Listener  // 문지기
+    public class Listener  // 문지기   서버 입장에서 client의 연결신청을 대기하는 역할
     {
         Socket _listenSocket;
         Func<Session> _sessionFactory;
