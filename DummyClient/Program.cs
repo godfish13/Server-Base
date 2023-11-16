@@ -31,10 +31,11 @@ namespace Server_Base
             Console.WriteLine($"OnDisConnected : {endPoint}");
         }
 
-        public override void OnReceive(ArraySegment<byte> buffer)
+        public override int OnReceive(ArraySegment<byte> buffer)
         {
             string receiveData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); // init에서 SetBuffer로 설정한 값 추출하는 args 변수들
             Console.WriteLine($"[From Server] : {receiveData}");
+            return buffer.Count;
         }
 
         public override void OnSend(int numOfbytes)

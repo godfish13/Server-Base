@@ -13,6 +13,8 @@ namespace ServerCore
         Socket _socket;
         int _disconnected = 0;
 
+        ReceiveBuffer _recvBuffer = new ReceiveBuffer(1024);
+
         object _lock = new object();
         Queue<byte[]> _sendQueue = new Queue<byte[]>();
         List<ArraySegment<byte>> _pendinglist = new List<ArraySegment<byte>>(); // RegisterSend() 내에서 _sendArgs.BufferList 제작용 list
@@ -21,18 +23,17 @@ namespace ServerCore
 
         // Program에서 Session을 상속하여 사용할 때 만들 인터페이스
         public abstract void OnConnected(EndPoint endPoint);      
-        public abstract void OnReceive(ArraySegment<byte> buffer);
+        public abstract int OnReceive(ArraySegment<byte> buffer);
         public abstract void OnSend(int numOfbytes);
         public abstract void OnDisConnected(EndPoint endPoint);
 
         public void Start(Socket socket)
         {
             _socket = socket;
-            _recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);            
-            _recvArgs.SetBuffer(new byte[1024], 0, 1024);    // (버퍼, 버퍼시작점, 버퍼의 사이즈)
 
             _sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
-
+            _recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
+            
             RegisterReceive();
         }
 
@@ -63,7 +64,7 @@ namespace ServerCore
             while (_sendQueue.Count > 0)
             {
                 byte[] buff = _sendQueue.Dequeue();
-                _pendinglist.Add(new ArraySegment<byte>(buff, 0, buff.Length));
+                _pendinglist.Add(new ArraySegment<byte>(buff, 0, buff.Length)); // ArraySegment<T>(버퍼, 버퍼시작점, 버퍼의 사이즈)
             }
             _sendArgs.BufferList = _pendinglist;     // Args.BufferList에 바로 Add하면 안되고 이처럼 list를 따로 선언하고 list를 완성시킨 후 복사붙여넣기해줘야함
                                                      // 그냥 C#에서 이따구로 만들어둠 외워서 쓰면됨
@@ -101,7 +102,11 @@ namespace ServerCore
         }
 
         void RegisterReceive()
-        {          
+        {
+            _recvBuffer.Clean();
+            ArraySegment<byte> segment = _recvBuffer.WritableSegment;
+            _recvArgs.SetBuffer(segment.Array, segment.Offset, segment.Count);
+
             bool pending = _socket.ReceiveAsync(_recvArgs);
             if (pending == false)
                 OnReceiveCompleted(null, _recvArgs);           
@@ -113,7 +118,28 @@ namespace ServerCore
             {
                 try
                 {
-                    OnReceive(new ArraySegment<byte>(args.Buffer, args.Offset, args.BytesTransferred));
+                    // _recvBuffer의 w_position 이동   // OnWrite내에서 실행되고 true/false return해줌
+                    if(_recvBuffer.OnWrite(args.BytesTransferred) == false)  // 요상한게 들어가면 바로 끊어버리고 return
+                    {
+                        DisConnect();
+                        return;
+                    }
+
+                    // 컨텐츠 쪽으로 데이터 넘겨주고 얼마나 처리했는지 받아옴
+                    int processLength =  OnReceive(_recvBuffer.ReadSegment);     
+                    if (processLength < 0 || _recvBuffer.DataSize < processLength)  // 처리하는 크기가 이상하면 끊고 return
+                    {
+                        DisConnect();
+                        return;
+                    }
+
+                    // _recvBuffer의 r_position 이동
+                    if(_recvBuffer.OnRead(processLength) == false) 
+                    {
+                        DisConnect();
+                        return;
+                    }
+
                     RegisterReceive();
                 }
                 catch (Exception e) 
