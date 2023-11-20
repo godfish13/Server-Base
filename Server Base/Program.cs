@@ -9,30 +9,44 @@ using ServerCore;
 
 namespace Server_Base
 {
-    class GameSession : Session // 실제로 각 상황에서 사용될 기능 구현
+    class Packet                // 대부분의 게임은 설계할 때, size를 첫번째 인자, packetID를 두번째 인자로 넘겨주는 경우가 많다
+    {
+        public ushort size;     // 메모리 절약을 위해 2byte == ushort정도만 사용함
+        public ushort packetID; // packet설계는 최대한 메모리 아껴주는게 좋음
+    }
+
+    class GameSession : PacketSession // 실제로 각 상황에서 사용될 기능 구현
     {
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to MMO RPG Server!!");
-            Send(sendBuff);
-            Thread.Sleep(100);
+            /*Packet packet = new Packet() { size = 100, packetID = 10};
+
+            ArraySegment<byte> openSegment = SendBufferHelper.Open(4096);
+            byte[] buffer1 = BitConverter.GetBytes(packet.size);   // BitConverter : 대충 값 알아서 buffer에 넣을 byte로 변환해줌
+            byte[] buffer2 = BitConverter.GetBytes(packet.packetID);
+            Array.Copy(buffer1, 0, openSegment.Array, openSegment.Offset, buffer1.Length);
+            Array.Copy(buffer2, 0, openSegment.Array, openSegment.Offset + buffer1.Length, buffer2.Length);
+            ArraySegment<byte> sendBuff = SendBufferHelper.Close(buffer1.Length + buffer2.Length);
+
+            Send(sendBuff);*/
+            Thread.Sleep(5000);
 
             DisConnect();
+        }
+
+        public override void OnReceivePacket(ArraySegment<byte> buffer)
+        {
+            ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+            ushort ID = BitConverter.ToUInt16(buffer.Array, buffer.Offset + 2);
+            Console.WriteLine($"ReceivePacketID : {ID}, size : {size}");
         }
 
         public override void OnDisConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnDisConnected : {endPoint}");
-        }
-
-        public override int OnReceive(ArraySegment<byte> buffer)
-        {
-            string receiveData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count); // init에서 SetBuffer로 설정한 값 추출하는 args 변수들
-            Console.WriteLine($"[From Client] : {receiveData}");
-            return buffer.Count;
-        }
+        }        
 
         public override void OnSend(int numOfbytes)
         {

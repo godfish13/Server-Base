@@ -8,6 +8,39 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
+    public abstract class PacketSession : Session
+    {
+        public static readonly int HeaderSize = 2;
+
+        // {size[2]}{packetID[2]}{ ...... } {size[2]}{packetID[2]}{ ...... } {size[2]} ... 의 형식으로 packet들이 오게 됨
+        public sealed override int OnReceive(ArraySegment<byte> buffer)     // sealed 키워드 : PacketSession을 상속받은 클래스들은 OnReceive를 override 불가능
+        {
+            int processLength = 0;
+
+            while (true)
+            {
+                if (buffer.Count < HeaderSize)  // 최소한 헤더(size파트)는 파싱할 수 있는지 확인 // size 메모리 크기가 2 이므로 최소한 2보단 커야함
+                    break;
+
+                ushort dataSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);   // UInt16 == Ushort의 크기 즉 buffer에서 size의 크기만 추출
+                if (buffer.Count < dataSize)    // 패킷이 dataSize보다 작으면 패킷이 다 안왔다는 뜻이므로 break
+                    break;
+
+                // 여기까지 통과했으면 패킷 조립 가능
+                OnReceivePacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize)); // 팁으로 ArraySegment는 struct이므로 new키워드를 써도 힙메모리 할당이 아닌 스택에서 처리됨
+
+                // 제일 앞에 {size[2]} {packetID[2]} { ...... }파트를 처리했으므로 다음 {size[2]} {packetID[2]} { ...... } 파트로 이동
+                processLength += dataSize;
+                buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);              
+            }
+
+            return processLength;
+        }
+
+        public abstract void OnReceivePacket(ArraySegment<byte> buffer);
+
+    }
+
     public abstract class Session  // Engine파트, 실 기능은 Program에서 상속하여 구현
     {
         Socket _socket;
@@ -16,7 +49,7 @@ namespace ServerCore
         ReceiveBuffer _recvBuffer = new ReceiveBuffer(1024);
 
         object _lock = new object();
-        Queue<byte[]> _sendQueue = new Queue<byte[]>();
+        Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>();
         List<ArraySegment<byte>> _pendinglist = new List<ArraySegment<byte>>(); // RegisterSend() 내에서 _sendArgs.BufferList 제작용 list
         SocketAsyncEventArgs _recvArgs = new SocketAsyncEventArgs();
         SocketAsyncEventArgs _sendArgs = new SocketAsyncEventArgs();    // 재활용 용이하게하기위해 멤버변수로 미리 선언
@@ -37,7 +70,7 @@ namespace ServerCore
             RegisterReceive();
         }
 
-        public void Send(byte[] sendBuff)   // sendBuff를 queue에 모아서 보내는 방식
+        public void Send(ArraySegment<byte> sendBuff)   // sendBuff를 queue에 모아서 보내는 방식
         {
             lock (_lock)
             {
@@ -63,8 +96,8 @@ namespace ServerCore
         {
             while (_sendQueue.Count > 0)
             {
-                byte[] buff = _sendQueue.Dequeue();
-                _pendinglist.Add(new ArraySegment<byte>(buff, 0, buff.Length)); // ArraySegment<T>(버퍼, 버퍼시작점, 버퍼의 사이즈)
+                ArraySegment<byte> buff = _sendQueue.Dequeue();
+                _pendinglist.Add(buff); // ArraySegment<T>(버퍼, 버퍼시작점, 버퍼의 사이즈)
             }
             _sendArgs.BufferList = _pendinglist;     // Args.BufferList에 바로 Add하면 안되고 이처럼 list를 따로 선언하고 list를 완성시킨 후 복사붙여넣기해줘야함
                                                      // 그냥 C#에서 이따구로 만들어둠 외워서 쓰면됨
