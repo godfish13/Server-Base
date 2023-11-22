@@ -13,20 +13,20 @@ namespace ServerCore
 
         public static int ChunkSize { get; set; } = 4096 * 100;
 
-        public static ArraySegment<byte> Open(int reserveSize)
+        public static ArraySegment<byte> Open(int reserveSize)  // 원하는 사이즈만큼 할당 요청
         {
-            if (CurrentBuffer.Value == null)
+            if (CurrentBuffer.Value == null)    // 따로 사용중인 CurrentBuffer 없으면 하나 만들어줌
                 CurrentBuffer.Value = new SendBuffer(ChunkSize);
 
-            if (CurrentBuffer.Value.FreeSize < reserveSize)
+            if (CurrentBuffer.Value.FreeSize < reserveSize)     // 원하는 사이즈만큼 여유공간 없으면 CurrentBuffer를 새걸로 초기화
                 CurrentBuffer.Value = new SendBuffer(ChunkSize);
 
-            return CurrentBuffer.Value.Open(reserveSize);
+            return CurrentBuffer.Value.Open(reserveSize);   // 원하는 사이즈만큼 여유공간을 가진 buffer를 리턴해줌
         }
 
         public static ArraySegment<byte> Close(int usedSize)
         {
-            return CurrentBuffer.Value.Close(usedSize);
+            return CurrentBuffer.Value.Close(usedSize);     // 완성한 Buffer 리턴해줌
         }
     }
 
