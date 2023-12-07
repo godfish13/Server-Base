@@ -23,6 +23,38 @@ namespace DummyClient
         public long playerID;
         public string name;
 
+        public struct Skillinfo
+        {
+            public int id;
+            public short level;
+            public float duration;
+
+            public bool Write(Span<byte> s, ref ushort count)
+            {
+                bool success = true;
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), id);
+                count += sizeof(int);
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), level);
+                count += sizeof(short);
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), duration);
+                count += sizeof(float);
+
+                return success;
+            }
+
+            public void Read(ReadOnlySpan<byte> s, ref ushort count)
+            {
+                id = BitConverter.ToInt32(s.Slice(count, s.Length - count));    // ToInt16, ToInt32, ToSingle 등 각 변수 자료형에 따라 주의!!
+                count += sizeof(int);
+                level = BitConverter.ToInt16(s.Slice(count, s.Length - count));
+                count += sizeof(short);
+                duration = BitConverter.ToSingle(s.Slice(count, s.Length - count)); // float은 ToSingle 사용
+                count += sizeof(float);
+            }
+        }
+
+        public List<Skillinfo> skills = new List<Skillinfo>();
+
         public PlayerInfoRequirement()
         {
             this.packetID = (ushort)PacketIDEnum.PlayerInfoRequirement;
@@ -51,6 +83,13 @@ namespace DummyClient
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLength); // nameLength 직렬화
             count += sizeof(ushort);
             count += nameLength;
+
+            // skill list 보내기
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)skills.Count);  // 스킬 갯수 직렬화, ushort로 메모리 아끼는거 기억!
+            count += sizeof(ushort);
+            foreach (Skillinfo skill in skills) // foreach를 통해 각 skill 마다 Write로 s에 직렬화해줌
+                success &= skill.Write(s, ref count);
+            
 
             success &= BitConverter.TryWriteBytes(s, count); // count == packet.size
             // 가장 밑줄에서 size == count를 buffer에 넣어줘야함!! 왜냐하면 최종적인 packet의 크기는 이것저것 넣고 난 뒤의 최종 count수치이기 때문!!
@@ -93,6 +132,18 @@ namespace DummyClient
             ushort nameLength = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
             count += sizeof(ushort);
             this.name = Encoding.Unicode.GetString(s.Slice(count, nameLength)); // byte를 string으로 바꿔서 읽어줌
+            count += nameLength;
+
+            // skill list 읽기
+            skills.Clear(); // 시작전 한번 청소
+            ushort skillLength = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+            count += sizeof(ushort);
+            for(int i = 0; i < skillLength; i++)
+            {
+                Skillinfo skill = new Skillinfo();
+                skill.Read(s, ref count);
+                skills.Add(skill);
+            }
         }    
     }
 
@@ -109,6 +160,10 @@ namespace DummyClient
             Console.WriteLine($"OnConnected : {endPoint}");
 
             PlayerInfoRequirement packet = new PlayerInfoRequirement() { playerID = 1001, name = "ABCD", };
+            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 101, level = 1, duration = 3.0f });
+            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 201, level = 2, duration = 2.5f });
+            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 301, level = 3, duration = 2.0f });
+            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 401, level = 4, duration = 1.5f });
 
             // 보낸다
             //for (int i = 0; i < 5; i++)

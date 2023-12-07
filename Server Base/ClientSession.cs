@@ -22,6 +22,38 @@ namespace Server_Base
         public long playerID;
         public string name;
 
+        public struct Skillinfo
+        {
+            public int id;
+            public short level;
+            public float duration;
+
+            public bool Write(Span<byte> s, ref ushort count)
+            {
+                bool success = true;
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), id);
+                count += sizeof(int);
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), level);
+                count += sizeof(short);
+                success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), duration);
+                count += sizeof(float);
+
+                return success;
+            }
+
+            public void Read(ReadOnlySpan<byte> s, ref ushort count)
+            {
+                id = BitConverter.ToInt32(s.Slice(count, s.Length - count));    // ToInt16, ToInt32, ToSingle 등 각 변수 자료형에 따라 주의!!
+                count += sizeof(int);
+                level = BitConverter.ToInt16(s.Slice(count, s.Length - count));
+                count += sizeof(short);
+                duration = BitConverter.ToSingle(s.Slice(count, s.Length - count)); // float은 ToSingle 사용
+                count += sizeof(float);
+            }
+        }
+
+        public List<Skillinfo> skills = new List<Skillinfo>();
+
         public PlayerInfoRequirement()
         {
             this.packetID = (ushort)PacketIDEnum.PlayerInfoRequirement;
@@ -44,12 +76,19 @@ namespace Server_Base
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerID);
             count += sizeof(long);                                                  // 시작점 재설정 + count     // 길이 재설정 - count
 
-            //string 보내기 전략 : 앞부분 ushort 2byte에 string의 길이를 담고 이후byte에 string 넣어서 보내기
+            //string 보내기 전략 : 앞부분 ushort 2byte에 string의 길이를 담고 이후byte에 string 넣어서 보내기                    
             ushort nameLength = (ushort)Encoding.Unicode.GetBytes(this.name, 0, this.name.Length, openSegment.Array, openSegment.Offset + count + sizeof(ushort));
             // Getbytes : 목표 bytes에 string 넣고 해당 길이 return  // string을 직렬화하기 전에 nameLength 정보를 담아둘 ushort 공간 미리 확보하고 그 뒷부분에 string 직렬화
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLength); // nameLength 직렬화
             count += sizeof(ushort);
             count += nameLength;
+
+            // skill list 보내기
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)skills.Count);  // 스킬 갯수 직렬화, ushort로 메모리 아끼는거 기억!
+            count += sizeof(ushort);
+            foreach (Skillinfo skill in skills) // foreach를 통해 각 skill 마다 Write로 s에 직렬화해줌
+                success &= skill.Write(s, ref count);
+
 
             success &= BitConverter.TryWriteBytes(s, count); // count == packet.size
             // 가장 밑줄에서 size == count를 buffer에 넣어줘야함!! 왜냐하면 최종적인 packet의 크기는 이것저것 넣고 난 뒤의 최종 count수치이기 때문!!
@@ -92,6 +131,18 @@ namespace Server_Base
             ushort nameLength = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
             count += sizeof(ushort);
             this.name = Encoding.Unicode.GetString(s.Slice(count, nameLength)); // byte를 string으로 바꿔서 읽어줌
+            count += nameLength;
+
+            // skill list 읽기
+            skills.Clear(); // 시작전 한번 청소
+            ushort skillLength = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+            count += sizeof(ushort);
+            for (int i = 0; i < skillLength; i++)
+            {
+                Skillinfo skill = new Skillinfo();
+                skill.Read(s, ref count);
+                skills.Add(skill);
+            }
         }
     }
 
@@ -128,6 +179,9 @@ namespace Server_Base
                         PlayerInfoRequirement p = new PlayerInfoRequirement();
                         p.ReadBuffer(buffer);
                         Console.WriteLine($"PlayerInfoRequirement : {p.playerID}, PlayerName : {p.name}");
+
+                        foreach (PlayerInfoRequirement.Skillinfo skill in p.skills)
+                            Console.WriteLine($"Skill : {skill.id}, Skill lvl : {skill.level}, Skill Duration : {skill.duration}");
                     }
                     break;
                 case PacketIDEnum.PlayerInfoOk:
