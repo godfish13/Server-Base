@@ -21,6 +21,7 @@ namespace DummyClient
     class PlayerInfoRequirement : Packet
     {
         public long playerID;
+        public string name;
 
         public PlayerInfoRequirement()
         {
@@ -33,17 +34,27 @@ namespace DummyClient
             bool success = true;
             ushort count = 0;
 
+            Span<byte> s = new Span<byte>(openSegment.Array, openSegment.Offset, openSegment.Count);
+            // Span : ArraySegment와 마찬가지로 Array의 범위를 지정하는 역할
+
             // GetBytes 후 Copy 대신 openSegment에 바로 packet 입력 // 단, 유니티 옛버전에서는 TryWriteBytes가 사용불가능함! 자기가 쓰는 버전 확인해보기
             //success &= BitConverter.TryWriteBytes(new Span<byte>(openSegment.Array, openSegment.Offset, openSegment.Count), packet.size); // 아래로 이동됨!
-            count += 2; // packet.size는 ushort 타입이므로 2인것은 확정, 그러므로 첫번째로 count+= 2 함으로서 버퍼 가장 앞부분에 size의 공간을 미리 확보해둠
-            success &= BitConverter.TryWriteBytes(new Span<byte>(openSegment.Array, openSegment.Offset + count, openSegment.Count - count), (ushort)PacketIDEnum.PlayerInfoRequirement);
-            count += 2;
-            success &= BitConverter.TryWriteBytes(new Span<byte>(openSegment.Array, openSegment.Offset + count, openSegment.Count - count), this.playerID);
-            count += 8;                                                             // 시작점 재설정 + count     // 길이 재설정 - count
-            success &= BitConverter.TryWriteBytes(new Span<byte>(openSegment.Array, openSegment.Offset, openSegment.Count), count); // count == packet.size
-            // Span : ArraySegment와 마찬가지로 Array의 범위를 지정하는 역할
-            
+            count += sizeof(ushort); // packet.size는 ushort 타입, 그러므로 첫번째로 버퍼 가장 앞부분에 size의 공간을 미리 확보해둠
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.packetID);
+            count += sizeof(ushort);
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerID);
+            count += sizeof(long);                                                  // 시작점 재설정 + count     // 길이 재설정 - count
+
+            //string 보내기 전략 : 앞부분 ushort 2byte에 string의 길이를 담고 이후byte에 string 넣어서 보내기                    
+            ushort nameLength = (ushort)Encoding.Unicode.GetBytes(this.name, 0, this.name.Length, openSegment.Array, openSegment.Offset + count + sizeof(ushort));
+            // Getbytes : 목표 bytes에 string 넣고 해당 길이 return  // string을 직렬화하기 전에 nameLength 정보를 담아둘 ushort 공간 미리 확보하고 그 뒷부분에 string 직렬화
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), nameLength); // nameLength 직렬화
+            count += sizeof(ushort);
+            count += nameLength;
+
+            success &= BitConverter.TryWriteBytes(s, count); // count == packet.size
             // 가장 밑줄에서 size == count를 buffer에 넣어줘야함!! 왜냐하면 최종적인 packet의 크기는 이것저것 넣고 난 뒤의 최종 count수치이기 때문!!
+
             if (success == false)   // 변환 실패시 null 반환
                 return null;
 
@@ -65,17 +76,23 @@ namespace DummyClient
         public override void ReadBuffer(ArraySegment<byte> segment)
         {
             ushort count = 0;
-            //ushort size = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-            count += 2;
-            //ushort ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-            count += 2;
+
+            ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+
+            count += sizeof(ushort);
+            count += sizeof(ushort);
 
             //this.playerID = BitConverter.ToInt64(segment.Array, segment.Offset + count); 이 방식은 만일 client가 size값을 이상하게 보낼시 오류 발생
-            this.playerID = BitConverter.ToInt64(new ReadOnlySpan<byte>(segment.Array, segment.Offset + count, segment.Count - count));
+            this.playerID = BitConverter.ToInt64(s.Slice(count, s.Length - count));
             // ex. writebuffer에서 size != 12로 거짓입력했을 시 segment의 완성본은 close에 의해 segment.Count != 12 가 됨
             // segment.Count - 4 != 8이므로 원래 long의 길이 8만큼 읽어야하는데 그게 성립되지 않으므로 오류 발생(Count < 12면 읽다가 OutofRange 에러, Count > 12면 이상함아무튼)
-            // 이때 catch 발생, 오류 체크 가능해짐
-            count += 8;
+            // 이때 slice이용 시 catch 발생, 오류 체크 가능해짐
+            count += sizeof(long);
+
+            // string 읽기
+            ushort nameLength = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+            count += sizeof(ushort);
+            this.name = Encoding.Unicode.GetString(s.Slice(count, nameLength)); // byte를 string으로 바꿔서 읽어줌
         }    
     }
 
@@ -91,7 +108,7 @@ namespace DummyClient
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            PlayerInfoRequirement packet = new PlayerInfoRequirement() { playerID = 1001 };
+            PlayerInfoRequirement packet = new PlayerInfoRequirement() { playerID = 1001, name = "ABCD", };
 
             // 보낸다
             //for (int i = 0; i < 5; i++)
