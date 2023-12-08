@@ -9,16 +9,7 @@ using System.Threading.Tasks;
 
 namespace DummyClient       
 {
-    public abstract class Packet    // 대부분의 게임은 설계할 때, buffer전체 크기 size를 첫번째 인자, packetID를 두번째 인자로 넘겨주는 경우가 많다
-    {
-        public ushort size;     // 메모리 절약을 위해 2byte == ushort정도만 사용함
-        public ushort packetID; // packet설계는 최대한 메모리 아껴주는게 좋음
-
-        public abstract ArraySegment<byte> WriteBuffer();
-        public abstract void ReadBuffer(ArraySegment<byte> segment);
-    }
-
-    class PlayerInfoRequirement : Packet
+    class PlayerInfoRequirement
     {
         public long playerID;
         public string name;
@@ -55,12 +46,8 @@ namespace DummyClient
 
         public List<Skillinfo> skills = new List<Skillinfo>();
 
-        public PlayerInfoRequirement()
-        {
-            this.packetID = (ushort)PacketIDEnum.PlayerInfoRequirement;
-        }
 
-        public override ArraySegment<byte> WriteBuffer()
+        public ArraySegment<byte> WriteBuffer()
         {
             ArraySegment<byte> openSegment = SendBufferHelper.Open(4096); // static threadLocal CurrentBuffer 생성 및 4096크기 할당 요청
             bool success = true;
@@ -72,7 +59,7 @@ namespace DummyClient
             // GetBytes 후 Copy 대신 openSegment에 바로 packet 입력 // 단, 유니티 옛버전에서는 TryWriteBytes가 사용불가능함! 자기가 쓰는 버전 확인해보기
             //success &= BitConverter.TryWriteBytes(new Span<byte>(openSegment.Array, openSegment.Offset, openSegment.Count), packet.size); // 아래로 이동됨!
             count += sizeof(ushort); // packet.size는 ushort 타입, 그러므로 첫번째로 버퍼 가장 앞부분에 size의 공간을 미리 확보해둠
-            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.packetID);
+            success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketIDEnum.PlayerInfoRequirement);
             count += sizeof(ushort);
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerID);
             count += sizeof(long);                                                  // 시작점 재설정 + count     // 길이 재설정 - count
@@ -112,7 +99,7 @@ namespace DummyClient
             return SendBufferHelper.Close(count);  // 완성된 CurrentBuffer를 sendBuff으로 보냄         
         }
 
-        public override void ReadBuffer(ArraySegment<byte> segment)
+        public void ReadBuffer(ArraySegment<byte> segment)
         {
             ushort count = 0;
 
