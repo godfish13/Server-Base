@@ -11,7 +11,7 @@ namespace PacketGenerator
         // {0} 패킷 이름
         // {1} 멤버 변수들
         // {2} 멤버 변수 Read
-        // {3} 멤버 변수 Write
+        // {3} 멤버 변수 Write       // {}을 매개변수 말고 중괄호로 쓰고싶으면 {{ 이런식으로 2개 연달아 쓰면됨
         public static string packetFormat =
 @"
 class {0}
@@ -53,8 +53,8 @@ class {0}
 
         // {0} 변수 형식
         // {1} 변수 이름
-        public static string MemberFormat =
-@"public {0} {1}";
+        public static string memberFormat =
+@"public {0} {1};";
 
         // {0} 변수 이름
         // {1} To~~ 변수 형식
