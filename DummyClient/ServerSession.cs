@@ -14,7 +14,7 @@ namespace DummyClient
         public long playerID;
         public string name;
 
-        public struct Skillinfo
+        public struct Skill
         {
             public int id;
             public short level;
@@ -44,7 +44,7 @@ namespace DummyClient
             }
         }
 
-        public List<Skillinfo> skills = new List<Skillinfo>();
+        public List<Skill> skills = new List<Skill>();
 
 
         public ArraySegment<byte> WriteBuffer()
@@ -74,7 +74,7 @@ namespace DummyClient
             // skill list 보내기
             success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)skills.Count);  // 스킬 갯수 직렬화, ushort로 메모리 아끼는거 기억!
             count += sizeof(ushort);
-            foreach (Skillinfo skill in skills) // foreach를 통해 각 skill 마다 Write로 s에 직렬화해줌
+            foreach (Skill skill in skills) // foreach를 통해 각 skill 마다 Write로 s에 직렬화해줌
                 success &= skill.Write(s, ref count);
             
 
@@ -84,18 +84,6 @@ namespace DummyClient
             if (success == false)   // 변환 실패시 null 반환
                 return null;
 
-            /*  // GetBytes는 안정성이 높음, 단 그만큼 사양 많이잡아먹음 // 그러므로 GetBytes 후 Copy하는 대신에 위의 TryWriteBytes로 바로 변환
-            byte[] size = BitConverter.GetBytes(packet.size);   // BitConverter : 대충 값 알아서 buffer에 넣을 byte로 변환해줌
-            byte[] packetID = BitConverter.GetBytes(packet.packetID);   
-            byte[] playerID = BitConverter.GetBytes(packet.playerID);   
-
-            Array.Copy(size, 0, openSegment.Array, openSegment.Offset + count, 2);  // CurrentBuffer에 값들 직렬화해서 입력
-            count += 2;
-            Array.Copy(packetID, 0, openSegment.Array, openSegment.Offset + count, 2);
-            count += 2;
-            Array.Copy(playerID, 0, openSegment.Array, openSegment.Offset + count, 8);
-            count += 8;             
-            */
             return SendBufferHelper.Close(count);  // 완성된 CurrentBuffer를 sendBuff으로 보냄         
         }
 
@@ -127,7 +115,7 @@ namespace DummyClient
             count += sizeof(ushort);
             for(int i = 0; i < skillLength; i++)
             {
-                Skillinfo skill = new Skillinfo();
+                Skill skill = new Skill();
                 skill.Read(s, ref count);
                 skills.Add(skill);
             }
@@ -147,10 +135,10 @@ namespace DummyClient
             Console.WriteLine($"OnConnected : {endPoint}");
 
             PlayerInfoRequirement packet = new PlayerInfoRequirement() { playerID = 1001, name = "ABCD", };
-            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 101, level = 1, duration = 3.0f });
-            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 201, level = 2, duration = 2.5f });
-            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 301, level = 3, duration = 2.0f });
-            packet.skills.Add(new PlayerInfoRequirement.Skillinfo() { id = 401, level = 4, duration = 1.5f });
+            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 101, level = 1, duration = 3.0f });
+            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 201, level = 2, duration = 2.5f });
+            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 301, level = 3, duration = 2.0f });
+            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 401, level = 4, duration = 1.5f });
 
             // 보낸다
             //for (int i = 0; i < 5; i++)

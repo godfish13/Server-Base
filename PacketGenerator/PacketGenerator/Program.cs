@@ -32,7 +32,7 @@ namespace PacketGenerator
             }   
         }
 
-        public static void ParsePacket(XmlReader r)     // 패킷이 정상적인지 판단해줌
+        public static void ParsePacket(XmlReader r)     // 패킷이 정상적인지 판단하고 패킷 내용 분석 후 genPackets에 저장
         {
             if (r.NodeType == XmlNodeType.EndElement)   // </PDL>같은 종료자면 오류처리
                 return;
@@ -108,6 +108,10 @@ namespace PacketGenerator
                         writeCode += string.Format(PacketFormat.writeStringFormat, memberName);
                         break;
                     case "list":
+                        Tuple<string, string, string> t = ParseList(r);
+                        memberCode += t.Item1;
+                        readCode += t.Item2;
+                        writeCode += t.Item3;
                         break;
                     default:
                         break;
@@ -115,8 +119,26 @@ namespace PacketGenerator
             }
 
             memberCode = memberCode.Replace("\n", "\n\t");  // 다음줄로 넘긴 이후 탭이 없는 경우 서식이 보기불편함으로 강제적으로 탭을 넣어줌
-            readCode = readCode.Replace("\n", "\n\t\t");    // 마찬가지로 ReadBuffer안 내용에 탭2번 넣어줌
+            readCode = readCode.Replace("\n", "\n\t\t");    // 마찬가지로 ReadBuffer 내부 내용에 탭2번 넣어줌
             writeCode = writeCode.Replace("\n", "\n\t\t");
+            return new Tuple<string, string, string>(memberCode, readCode, writeCode);
+        }
+
+        public static Tuple<string, string, string> ParseList(XmlReader r)  // list관련 Xml 분석하고 list파트 완성시켜줌
+        {
+            string listName = r["name"];
+            if(string.IsNullOrEmpty(listName)) 
+            {
+                Console.WriteLine("List without Name");
+                return null;
+            }
+
+            Tuple<string, string, string> t = ParseMembers(r);
+
+            string memberCode = string.Format(PacketFormat.memberListFormat, FirstCharToUpper(listName), FirstCharToLower(listName), t.Item1, t.Item2, t.Item3);
+            string readCode = string.Format(PacketFormat.readListFormat, FirstCharToUpper(listName), FirstCharToLower(listName));
+            string writeCode = string.Format(PacketFormat.writeListFormat, FirstCharToUpper(listName), FirstCharToLower(listName));
+        
             return new Tuple<string, string, string>(memberCode, readCode, writeCode);
         }
 
@@ -141,6 +163,20 @@ namespace PacketGenerator
                 default:
                     return "";
             }
+        }
+
+        public static string FirstCharToUpper(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return null;
+            return input[0].ToString().ToUpper() + input.Substring(1);
+        }
+
+        public static string FirstCharToLower(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return null;
+            return input[0].ToString().ToLower() + input.Substring(1);
         }
     }
 }
