@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Xml;
 
-namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성하기 위한 스크립트
+namespace PacketGenerator
 {
-    class Program       // ServerSession.cs 등 완성시켜둔 스크립트 참조
+    class Program
     {
         static string genPackets;    // 실시간으로 계속 생성되는 string 저장해둘 변수
-
-        static ushort packetID;
-        static string packetEnums;
 
         static void Main(string[] args) 
         {
@@ -31,8 +28,7 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
                     }
                 }
 
-                string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
-                File.WriteAllText("GenPackets.cs", fileText);
+                File.WriteAllText("GenPackets.cs", genPackets);
             }   
         }
 
@@ -47,7 +43,7 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
                 return;
             }
 
-            string packetName = r["name"];  // r.Name 아님 주의! r.Name은 type, PDL로 예를들면 packet, Long, string 등을 반환함
+            string packetName = r["name"];  // r.Name 아님 주의! r.Name은 type, PDL로 예를들면 pcaket, Long, string 등을 반환함
             if (string.IsNullOrEmpty(packetName))   // packetName이 비어있으면 오류처리
             {
                 Console.WriteLine("err : Packet without name");
@@ -57,7 +53,6 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
             Tuple<string, string, string> t = ParseMembers(r);
             genPackets += string.Format(PacketFormat.packetFormat, packetName, t.Item1, t.Item2, t.Item3);
             // packetFormat에 들어갈 {0}, {1}, {2}, {3}을 지정해서 string을 만들기
-            packetEnums += string.Format(PacketFormat.packetEnumFormat, packetName, ++packetID) + Environment.NewLine + "\t";
         }
 
         // packetFormat의 {1}{2}{3}과 동일
@@ -72,8 +67,8 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
             string readCode = "";
             string writeCode = "";
 
-            int depth = r.Depth + 1;    // playerInfoRequirement 내의 컨텐츠들을 원함
-            while(r.Read())     // r(playerInfoRequirement)의 content를 순차적으로 읽어감
+            int depth = r.Depth + 1;    // playerInfoRequirement 내의 목록들을 원함
+            while(r.Read())     // r의 content를 순차적으로 읽어감
             {
                 if (r.Depth != depth)   // 목표 목록들을 빠져나가면 break
                     break;
@@ -95,13 +90,8 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
                 string memberType = r.Name.ToLower();   // 오류 방지를 위해 type명들 소문자화 시켜줌
                 switch (memberType) 
                 {
+                    case "bool":
                     case "byte":
-                    case "sbyte":
-                        memberCode += string.Format(PacketFormat.memberFormat, memberType, memberName);
-                        readCode += string.Format(PacketFormat.readByteFormat, memberName, memberType);
-                        writeCode += string.Format(PacketFormat.writeByteFormat, memberName, memberType);
-                        break;
-                    case "bool":                    
                     case "short":
                     case "ushort":
                     case "int":
