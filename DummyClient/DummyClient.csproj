@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ServerClientSession_nonGenPacketsversion_backup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ServerClientSession_nonGenPacketsversion_backup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ServerCore\ServerCore.csproj" />
   </ItemGroup>
 

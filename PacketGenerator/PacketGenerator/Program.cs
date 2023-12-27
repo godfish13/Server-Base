@@ -12,13 +12,18 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
 
         static void Main(string[] args) 
         {
+            string pdlPath = "../../PDL.xml";       // ../ 를 경로에 넣으면 현재 경로에서 한칸 뒤를 의미함
+
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 IgnoreComments = true,  // 주석 무시
                 IgnoreWhitespace = true,    // 공백 무시
             };
 
-            using (XmlReader r = XmlReader.Create("PDL.xml", settings)) // using으로 감싸면 using을 벗어날때 알아서 XmlReader.Dispose() 발동해줌
+            if (args.Length >= 1)
+                pdlPath = args[0];
+
+            using (XmlReader r = XmlReader.Create(pdlPath, settings)) // using으로 감싸면 using을 벗어날때 알아서 XmlReader.Dispose() 발동해줌
             {
                 r.MoveToContent();  //헤더문 넘기고 내용물 읽기 시작
                 
