@@ -15,6 +15,9 @@ namespace Server_Base
 
         static void Main(string[] args)
         {
+            PacketManager.Instance.Register(); 
+            // PacketID에 따라 작동하는 PacketHandler내 handler들을 dictionary에 저장 => dictionary사용으로 switch case 탐색 대체
+
             // DNS (Domain Name System) : 주소 이름으로 IP 찾는 방식
             string host = Dns.GetHostName();    // 내 컴퓨터 주소의 이름을 알아내고 host에 저장
             IPHostEntry ipHost = Dns.GetHostEntry(host);    // 알아낸 주소의 여러 정보가 담김 Dns가 알아서 해줌

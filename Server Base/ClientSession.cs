@@ -22,32 +22,8 @@ namespace Server_Base
         
         public override void OnReceivePacket(ArraySegment<byte> buffer)
         {
-            ushort count = 0;
-            ushort size = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
-            count += 2;
-            ushort ID = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
-            count += 2;
-
-            switch ((PacketIDEnum)ID)
-            {
-                case PacketIDEnum.PlayerInfoRequirement:
-                    {
-                        PlayerInfoRequirement p = new PlayerInfoRequirement();
-                        p.ReadBuffer(buffer);
-                        Console.WriteLine($"PlayerInfoRequirement : {p.playerID}, PlayerName : {p.name}");
-
-                        foreach (PlayerInfoRequirement.Skill skill in p.skills)
-                            Console.WriteLine($"Skill : {skill.id}, Skill lvl : {skill.level}, Skill Duration : {skill.duration}");
-                    }
-                    break;
-                /*case PacketIDEnum.PlayerInfoOk:
-                    {
-
-                    }
-                    break*/
-            }
-
-            Console.WriteLine($"ReceivePacketID : {ID}, size : {size}");
+            PacketManager.Instance.OnReceivePacket(this, buffer);
+            // 싱글톤으로 구현해둔 PacketManager에 연결
         }
 
         public override void OnDisConnected(EndPoint endPoint)

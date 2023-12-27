@@ -14,8 +14,16 @@ public enum PacketIDEnum
 	
 }
 
+interface IPacket
+{
+    ushort Protocol { get; }
+	void ReadBuffer(ArraySegment<byte> segement);
+	ArraySegment<byte> WriteBuffer();
+}
 
-class PlayerInfoRequirement
+
+
+class PlayerInfoRequirement : IPacket
 {
     public byte testByte;
 	public long playerID;
@@ -108,6 +116,8 @@ class PlayerInfoRequirement
 	}
 	
 
+    public ushort Protocol => (ushort)PacketIDEnum.PlayerInfoRequirement;    
+
     public void ReadBuffer(ArraySegment<byte> segment)
     {
         ushort count = 0;
@@ -183,10 +193,12 @@ class PlayerInfoRequirement
     }
 }
 
-class Test
+class Test : IPacket
 {
     public int testint;
 	public string none;
+
+    public ushort Protocol => (ushort)PacketIDEnum.Test;    
 
     public void ReadBuffer(ArraySegment<byte> segment)
     {
@@ -204,7 +216,7 @@ class Test
 		// string none 읽기
 		ushort noneLength = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
 		count += sizeof(ushort);
-		this.none = Encoding.Unicode.GetString(s.Slice(count, nameLength));
+		this.none = Encoding.Unicode.GetString(s.Slice(count, noneLength));
 		count += noneLength;
     } 
     

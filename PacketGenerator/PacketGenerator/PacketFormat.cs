@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PacketGenerator
+namespace PacketGenerator       // common/batch.exe 실행을 통해 GenPackets를 생성하고 DummyClient, Server_Base에 각각 복사붙여넣기 해줌
 {
     internal class PacketFormat     // @""의 형태로 @를 붙여서 쓰면 아래처럼 쓸 수 있음
     {
@@ -24,6 +24,14 @@ public enum PacketIDEnum
 {{
     {0}
 }}
+
+interface IPacket
+{{
+    ushort Protocol {{ get; }}
+	void ReadBuffer(ArraySegment<byte> segement);
+	ArraySegment<byte> WriteBuffer();
+}}
+
 {1}";
         // {0} : 패킷 이름
         // {1} : 패킷 번호
@@ -39,9 +47,11 @@ public enum PacketIDEnum
         public static string packetFormat =
 @"
 
-class {0}
+class {0} : IPacket
 {{
     {1}
+
+    public ushort Protocol => (ushort)PacketIDEnum.{0};    
 
     public void ReadBuffer(ArraySegment<byte> segment)
     {{
@@ -132,7 +142,7 @@ count += sizeof({1});";
 // string {0} 읽기
 ushort {0}Length = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
 count += sizeof(ushort);
-this.{0} = Encoding.Unicode.GetString(s.Slice(count, nameLength));
+this.{0} = Encoding.Unicode.GetString(s.Slice(count, {0}Length));
 count += {0}Length;";
 
         // {0} 리스트 이름 [대문자시작] : struct 이름
