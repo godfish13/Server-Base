@@ -13,6 +13,9 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
         static string clientRegister;   // 서버가 클라에게 보내는 패킷(S_~~~) packet register
         static string serverRegister;   // 클라가 서버에게 보내는 패킷(C_~~~) packet register
 
+        static string S_PacketHandler;    // 각 패킷별 작동 구현할 Handler
+        static string C_PacketHandler;
+
         static void Main(string[] args) 
         {
             string pdlPath = "../../PDL.xml";       // ../ 를 경로에 넣으면 현재 경로에서 한칸 뒤를 의미함
@@ -45,6 +48,9 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
                 File.WriteAllText("ClientPacketManager.cs", clientManagerText);
                 string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister);
                 File.WriteAllText("ServerPacketManager.cs", serverManagerText);
+                
+                File.WriteAllText("S_PacketHandler.cs", S_PacketHandler);
+                File.WriteAllText("C_PacketHandler.cs", C_PacketHandler);
             }   
         }
 
@@ -72,9 +78,15 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
             packetEnums += string.Format(PacketFormat.packetEnumFormat, packetName, ++packetID) + Environment.NewLine + "\t";
 
             if (packetName.StartsWith("S_") || packetName.StartsWith("s_"))
-                clientRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
+            {
+                clientRegister += string.Format(PacketFormat.managerRegisterFormat, packetName, packetName.Substring(0, 2)) + Environment.NewLine;
+                S_PacketHandler += string.Format(PacketFormat.packetHandlerFormat, packetName, packetName.Substring(0, 2), "using DummyClient;");
+            }
             else
-                serverRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
+            {
+                serverRegister += string.Format(PacketFormat.managerRegisterFormat, packetName, packetName.Substring(0, 2)) + Environment.NewLine;
+                C_PacketHandler += string.Format(PacketFormat.packetHandlerFormat, packetName, packetName.Substring(0, 2), "using Server_Base;");
+            }                
         }
 
         // packetFormat의 {1}{2}{3}과 동일

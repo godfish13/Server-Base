@@ -59,9 +59,30 @@ class PacketManager
 }}";
 
         // {0} : 패킷 이름
+        // {1} : 패킷 이름 앞에 2글자(C_ or S_)
         public static string managerRegisterFormat =
 @"        _onRecv.Add((ushort)PacketIDEnum.{0}, MakePacket<{0}>);
-        _handler.Add((ushort)PacketIDEnum.{0}, PacketHandler.{0}Handler);";
+        _handler.Add((ushort)PacketIDEnum.{0}, {1}PacketHandler.{0}Handler);";
+
+        // {0} : 패킷 이름
+        // {1} : 패킷 이름 앞에 2글자(C_ or S_)
+        // {2} : using 지시문(S_일 시 using DummyClient, C_일 시 using ServerBase
+        public static string packetHandlerFormat =
+@"{2}
+using ServerCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+class {1}PacketHandler
+{{
+    public static void {0}Handler(PacketSession session, IPacket packet)
+    {{
+
+    }}
+}}";
 
 
         // {0} : 패킷 이름/번호 목록

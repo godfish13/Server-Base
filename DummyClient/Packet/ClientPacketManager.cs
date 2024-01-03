@@ -20,7 +20,7 @@ class PacketManager
     public void Register()
     {
         _onRecv.Add((ushort)PacketIDEnum.S_Chat, MakePacket<S_Chat>);
-        _handler.Add((ushort)PacketIDEnum.S_Chat, PacketHandler.S_ChatHandler);
+        _handler.Add((ushort)PacketIDEnum.S_Chat, S_PacketHandler.S_ChatHandler);
 
     }
 
