@@ -5,25 +5,22 @@ using System.Collections.Generic;
 class PacketManager
 {
     #region Singletone
-    static PacketManager _instance;
-    public static PacketManager Instance
-    { 
-        get
-        {
-            if( _instance == null)
-                _instance = new PacketManager();
-            return _instance;
-        }
-    }
+    static PacketManager _instance = new PacketManager();
+    public static PacketManager Instance { get { return _instance; } }
     #endregion
+
+    PacketManager() 
+    {
+        Register();
+    }
 
     Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>>>();
     Dictionary<ushort, Action<PacketSession, IPacket>> _handler = new Dictionary<ushort, Action<PacketSession, IPacket>>();
 
     public void Register()
     {
-        _onRecv.Add((ushort)PacketIDEnum.C_PlayerInfoRequirement, MakePacket<C_PlayerInfoRequirement>);
-        _handler.Add((ushort)PacketIDEnum.C_PlayerInfoRequirement, PacketHandler.C_PlayerInfoRequirementHandler);
+        _onRecv.Add((ushort)PacketIDEnum.C_Chat, MakePacket<C_Chat>);
+        _handler.Add((ushort)PacketIDEnum.C_Chat, PacketHandler.C_ChatHandler);
 
     }
 

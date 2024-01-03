@@ -10,13 +10,15 @@ namespace Server_Base
 {
     class ClientSession : PacketSession // 실제로 각 상황에서 사용될 기능 구현     // Client에 앉혀둘 대리인
     {
+        public int Sessionid { get; set; }
+        public GameRoom Room { get; set; }
+
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            Thread.Sleep(5000);
-
-            DisConnect();
+            Program.Room.Enter(this);
+            //ToDo
         }
         //[4][.] [I][D] [][][][][][][][]
         
@@ -28,12 +30,18 @@ namespace Server_Base
 
         public override void OnDisConnected(EndPoint endPoint)
         {
+            SessionManager.instance.Remove(this);
+            if (Room != null)
+            {
+                Room.Leave(this);
+                Room = null;
+            }
             Console.WriteLine($"OnDisConnected : {endPoint}");
         }
 
         public override void OnSend(int numOfbytes)
         {
-            Console.WriteLine($"Transferred args byte : {numOfbytes}");
+            //Console.WriteLine($"Transferred args byte : {numOfbytes}");
         }
     }
 }

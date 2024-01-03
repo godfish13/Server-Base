@@ -60,6 +60,15 @@ namespace ServerCore
         public abstract void OnSend(int numOfbytes);
         public abstract void OnDisConnected(EndPoint endPoint);
 
+        void Clear()
+        {
+            lock (_lock) 
+            {
+                _sendQueue.Clear();
+                _pendinglist.Clear();
+            }
+        }
+
         public void Start(Socket socket)
         {
             _socket = socket;
@@ -88,12 +97,16 @@ namespace ServerCore
             OnDisConnected(_socket.RemoteEndPoint);
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
+            Clear();
         }
 
         #region 네트워크 통신 send, receive   
 
         void RegisterSend() // Send에 의해서만 호출되므로 이미 lock이 걸린 내부에서만 동작 => 따로 lock 안걸어줌
         {
+            if(_disconnected == 1)
+                return;
+
             while (_sendQueue.Count > 0)
             {
                 ArraySegment<byte> buff = _sendQueue.Dequeue();
@@ -101,9 +114,17 @@ namespace ServerCore
             }
             _sendArgs.BufferList = _pendinglist;     // Args.BufferList에 바로 Add하면 안되고 이처럼 list를 따로 선언하고 list를 완성시킨 후 복사붙여넣기해줘야함
                                                      // 그냥 C#에서 이따구로 만들어둠 외워서 쓰면됨
-            bool pending = _socket.SendAsync(_sendArgs);
-            if (pending == false)
-                OnSendCompleted(null, _sendArgs);
+
+            try
+            {
+                bool pending = _socket.SendAsync(_sendArgs);
+                if (pending == false)
+                    OnSendCompleted(null, _sendArgs);
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine($"RegisterSend failed : {e}");
+            }
         }
 
         void OnSendCompleted(object sender, SocketAsyncEventArgs args)  // RegisterSend 외에 이벤트 콜백에 의해 멀티스레드 상태로 호출될 수 있으므로 lock 걸어줌
@@ -124,7 +145,7 @@ namespace ServerCore
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"OnSendComplete Failed : {e}");
+                        Console.WriteLine($"OnSendComplete failed : {e}");
                     }
                 }
                 else
@@ -136,13 +157,23 @@ namespace ServerCore
 
         void RegisterReceive()
         {
+            if (_disconnected == 1)
+                return;
+
             _recvBuffer.Clean();
             ArraySegment<byte> segment = _recvBuffer.WritableSegment;
             _recvArgs.SetBuffer(segment.Array, segment.Offset, segment.Count);
 
-            bool pending = _socket.ReceiveAsync(_recvArgs);
-            if (pending == false)
-                OnReceiveCompleted(null, _recvArgs);           
+            try
+            {
+                bool pending = _socket.ReceiveAsync(_recvArgs);
+                if (pending == false)
+                    OnReceiveCompleted(null, _recvArgs);
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine($"RegisterReceive Failed : {e}");
+            }         
         }
 
         void OnReceiveCompleted(object sender, SocketAsyncEventArgs args)

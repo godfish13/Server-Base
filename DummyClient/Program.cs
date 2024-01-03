@@ -24,23 +24,20 @@ namespace Server_Base
 
             Connector connector = new Connector();
 
-            connector.Connect(endPoint, () => { return new ServerSession(); });
+            connector.Connect(endPoint, () => { return SessionManager.instance.Generate(); }, 10);
 
             while(true)
             {
-                // 자기 휴대폰 설정
-                Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
                 try
                 {
-
+                    SessionManager.instance.SendforEach();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(250);      // 일반적으로 mmo에서 이동 패킷을 1초에 4번 보냄 그러므로 1/4초인 250으로 실험
             }                   
         }
     }
