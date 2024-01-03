@@ -15,16 +15,16 @@ namespace DummyClient
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            PlayerInfoRequirement packet = new PlayerInfoRequirement() { playerID = 1001, name = "ABCD", };
+            C_PlayerInfoRequirement packet = new C_PlayerInfoRequirement() { playerID = 1001, name = "ABCD", };
 
-            var Skill = new PlayerInfoRequirement.Skill() { id = 501, level = 5, duration = 5 };
-            Skill.attributes.Add(new PlayerInfoRequirement.Skill.Attribute() { att = 11 });
+            var Skill = new C_PlayerInfoRequirement.Skill() { id = 501, level = 5, duration = 5 };
+            Skill.attributes.Add(new C_PlayerInfoRequirement.Skill.Attribute() { att = 11 });
             packet.skills.Add(Skill);
 
-            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 101, level = 1, duration = 3.0f });
-            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 201, level = 2, duration = 2.5f });
-            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 301, level = 3, duration = 2.0f });
-            packet.skills.Add(new PlayerInfoRequirement.Skill() { id = 401, level = 4, duration = 1.5f });
+            packet.skills.Add(new C_PlayerInfoRequirement.Skill() { id = 101, level = 1, duration = 3.0f });
+            packet.skills.Add(new C_PlayerInfoRequirement.Skill() { id = 201, level = 2, duration = 2.5f });
+            packet.skills.Add(new C_PlayerInfoRequirement.Skill() { id = 301, level = 3, duration = 2.0f });
+            packet.skills.Add(new C_PlayerInfoRequirement.Skill() { id = 401, level = 4, duration = 1.5f });
 
             // 보낸다
             //for (int i = 0; i < 5; i++)

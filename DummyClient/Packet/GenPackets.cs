@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 public enum PacketIDEnum
 {
-    PlayerInfoRequirement = 1,
-	Test = 2,
+    C_PlayerInfoRequirement = 1,
+	S_Test = 2,
 	
 }
 
@@ -23,7 +23,7 @@ interface IPacket
 
 
 
-class PlayerInfoRequirement : IPacket
+class C_PlayerInfoRequirement : IPacket
 {
     public byte testByte;
 	public long playerID;
@@ -116,7 +116,7 @@ class PlayerInfoRequirement : IPacket
 	}
 	
 
-    public ushort Protocol => (ushort)PacketIDEnum.PlayerInfoRequirement;    
+    public ushort Protocol => (ushort)PacketIDEnum.C_PlayerInfoRequirement;    
 
     public void ReadBuffer(ArraySegment<byte> segment)
     {
@@ -162,7 +162,7 @@ class PlayerInfoRequirement : IPacket
         Span<byte> s = new Span<byte>(openSegment.Array, openSegment.Offset, openSegment.Count);
 
         count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketIDEnum.PlayerInfoRequirement);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketIDEnum.C_PlayerInfoRequirement);
         count += sizeof(ushort);
 
         
@@ -193,12 +193,12 @@ class PlayerInfoRequirement : IPacket
     }
 }
 
-class Test : IPacket
+class S_Test : IPacket
 {
     public int testint;
 	public string none;
 
-    public ushort Protocol => (ushort)PacketIDEnum.Test;    
+    public ushort Protocol => (ushort)PacketIDEnum.S_Test;    
 
     public void ReadBuffer(ArraySegment<byte> segment)
     {
@@ -229,7 +229,7 @@ class Test : IPacket
         Span<byte> s = new Span<byte>(openSegment.Array, openSegment.Offset, openSegment.Count);
 
         count += sizeof(ushort);
-        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketIDEnum.Test);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketIDEnum.S_Test);
         count += sizeof(ushort);
 
         

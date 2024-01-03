@@ -10,6 +10,9 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
         static ushort packetID;
         static string packetEnums;
 
+        static string clientRegister;   // 서버가 클라에게 보내는 패킷(S_~~~) packet register
+        static string serverRegister;   // 클라가 서버에게 보내는 패킷(C_~~~) packet register
+
         static void Main(string[] args) 
         {
             string pdlPath = "../../PDL.xml";       // ../ 를 경로에 넣으면 현재 경로에서 한칸 뒤를 의미함
@@ -38,10 +41,14 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
 
                 string fileText = string.Format(PacketFormat.fileFormat, packetEnums, genPackets);
                 File.WriteAllText("GenPackets.cs", fileText);
+                string clientManagerText = string.Format(PacketFormat.managerFormat, clientRegister);
+                File.WriteAllText("ClientPacketManager.cs", clientManagerText);
+                string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister);
+                File.WriteAllText("ServerPacketManager.cs", serverManagerText);
             }   
         }
 
-        public static void ParsePacket(XmlReader r)     // 패킷이 정상적인지 판단하고 패킷 내용 분석 후 genPackets에 저장
+        public static void ParsePacket(XmlReader r)     // 패킷이 정상적인지 판단하고 패킷 내용 분석 후 genPackets/packetManager에 저장
         {
             if (r.NodeType == XmlNodeType.EndElement)   // </PDL>같은 종료자면 오류처리
                 return;
@@ -63,6 +70,11 @@ namespace PacketGenerator   // ServerSession.cs등 패킷을 자동으로 생성
             genPackets += string.Format(PacketFormat.packetFormat, packetName, t.Item1, t.Item2, t.Item3);
             // packetFormat에 들어갈 {0}, {1}, {2}, {3}을 지정해서 string을 만들기
             packetEnums += string.Format(PacketFormat.packetEnumFormat, packetName, ++packetID) + Environment.NewLine + "\t";
+
+            if (packetName.StartsWith("S_") || packetName.StartsWith("s_"))
+                clientRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
+            else
+                serverRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
         }
 
         // packetFormat의 {1}{2}{3}과 동일
