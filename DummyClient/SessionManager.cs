@@ -14,14 +14,14 @@ namespace DummyClient
         List<ServerSession> _sessions = new List<ServerSession>();
         object _lock = new object();
 
-        public void SendforEach()
+        public void SendforEach(string msg)
         {
             lock (_lock)
             {
                 foreach (ServerSession session in _sessions) 
                 {
                     C_Chat chatPacket = new C_Chat();
-                    chatPacket.chat = "Hello, Server!";
+                    chatPacket.chat = msg;
                     ArraySegment<byte> segment = chatPacket.WriteBuffer();
 
                     session.Send(segment);

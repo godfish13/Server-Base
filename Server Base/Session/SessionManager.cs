@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServerCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace Server_Base
                 session.Sessionid = sessionid;
                 _sessionDic.Add(sessionid, session);
 
-                Console.WriteLine($"Connected : {session.Sessionid}");
+                //Console.WriteLine($"Connected : {session.Sessionid}");
 
                 return session;
             }

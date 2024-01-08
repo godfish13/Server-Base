@@ -15,9 +15,9 @@ namespace Server_Base
 
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"OnConnected : {endPoint}");
+            Console.WriteLine($"Client Session ({this.Sessionid}) OnConnected : {endPoint}");
 
-            Program.Room.Enter(this);
+            Program.Room.Push(() => Program.Room.Enter(this));  // JobQueue에 등록
             //ToDo
         }
         //[4][.] [I][D] [][][][][][][][]
@@ -25,6 +25,7 @@ namespace Server_Base
         public override void OnReceivePacket(ArraySegment<byte> buffer)
         {
             PacketManager.Instance.OnReceivePacket(this, buffer);
+            //Console.WriteLine("ClentSession received Packet");
             // 싱글톤으로 구현해둔 PacketManager에 연결
         }
 
@@ -33,15 +34,17 @@ namespace Server_Base
             SessionManager.instance.Remove(this);
             if (Room != null)
             {
-                Room.Leave(this);
+                GameRoom room = Room;   // DummyClient 종료 시, Room = null 인 상태에서 JobQueue의 leave에서 null ref 오류 발생
+                                        // 이를 방지하기 위해 null되지않은 room을 하나 만들어서 사용
+                room.Push(() => room.Leave(this));  // JobQueue에 등록
                 Room = null;
             }
-            Console.WriteLine($"OnDisConnected : {endPoint}");
+            Console.WriteLine($"OnDisConnected ({this.Sessionid}) : {endPoint}");
         }
 
         public override void OnSend(int numOfbytes)
         {
-            //Console.WriteLine($"Transferred args byte : {numOfbytes}");
+            //  Console.WriteLine($"Transferred args byte : {numOfbytes}");
         }
     }
 }

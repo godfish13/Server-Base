@@ -14,7 +14,7 @@ namespace ServerCore
         Socket _listenSocket;
         Func<Session> _sessionFactory;
 
-        public void init(IPEndPoint endPoint, Func<Session> sessionFactory)
+        public void init(IPEndPoint endPoint, Func<Session> sessionFactory, int register = 10, int backlog = 100)
         {
             // 문지기가 든 휴대폰 (listen Socket)
             _listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -24,9 +24,9 @@ namespace ServerCore
             _listenSocket.Bind(endPoint);
 
             // 영업 시작
-            _listenSocket.Listen(10);    // backlog == 최대 대기 수
+            _listenSocket.Listen(backlog);    // backlog == 최대 대기 수
 
-            for (int i = 0; i < 10; i++)    // 한번에 여러개 돌리고 싶을 경우(문지기 여러명이 필요할 경우) 여러개를 만들어 돌리면 됨
+            for (int i = 0; i < register; i++)    // 한번에 여러개 돌리고 싶을 경우(문지기 여러명이 필요할 경우) 여러개를 만들어 돌리면 됨
             {
                 SocketAsyncEventArgs args = new SocketAsyncEventArgs(); // 한번 new해두면 계속 재활용 가능
                 args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted); // args.Completed이벤트에 OnAcceptCompleted 콜백 연동

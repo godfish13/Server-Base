@@ -24,13 +24,13 @@ namespace Server_Base
 
             Connector connector = new Connector();
 
-            connector.Connect(endPoint, () => { return SessionManager.instance.Generate(); }, 10);
+            connector.Connect(endPoint, () => { return SessionManager.instance.Generate(); }, 100);
 
             while(true)
             {
                 try
                 {
-                    SessionManager.instance.SendforEach();
+                    SessionManager.instance.SendforEach("Hello!");
                 }
                 catch (Exception e)
                 {
