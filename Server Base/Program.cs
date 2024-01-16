@@ -28,7 +28,8 @@ namespace Server_Base
 
             while (true)
             {
-                // 프로그램 중단되지 말라고 넣어둠
+                Room.Push(() => Room.Flush());
+                Thread.Sleep(250);  // 0.25초마다 Flush
             }
         }
     }

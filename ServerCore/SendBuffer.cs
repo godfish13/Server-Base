@@ -11,7 +11,7 @@ namespace ServerCore
         public static ThreadLocal<SendBuffer> CurrentBuffer = new ThreadLocal<SendBuffer>(() => { return null; });
         // 전역변수로 올려두지만 멀티스레드 환경이므로 ThreadLocal로 선언
 
-        public static int ChunkSize { get; set; } = 4096 * 100;
+        public static int ChunkSize { get; set; } = 65535 * 100;
 
         public static ArraySegment<byte> Open(int reserveSize)  // 원하는 사이즈만큼 할당 요청
         {

@@ -16,6 +16,7 @@ namespace ServerCore
         public sealed override int OnReceive(ArraySegment<byte> buffer)     // sealed 키워드 : PacketSession을 상속받은 클래스들은 OnReceive를 override 불가능
         {
             int processLength = 0;
+            int PacketCount = 0;
 
             while (true)
             {
@@ -28,11 +29,15 @@ namespace ServerCore
 
                 // 여기까지 통과했으면 패킷 조립 가능
                 OnReceivePacket(new ArraySegment<byte>(buffer.Array, buffer.Offset, dataSize)); // 팁으로 ArraySegment는 struct이므로 new키워드를 써도 힙메모리 할당이 아닌 스택에서 처리됨
+                PacketCount++;
 
                 // 제일 앞에 {size[2]} {packetID[2]} { ...... }파트를 처리했으므로 다음 {size[2]} {packetID[2]} { ...... } 파트로 이동
                 processLength += dataSize;
                 buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);              
             }
+
+            if (PacketCount > 1)
+                Console.WriteLine($"패킷 모아보내기 : {PacketCount}");
 
             return processLength;
         }
@@ -46,7 +51,7 @@ namespace ServerCore
         Socket _socket;
         int _disconnected = 0;
 
-        ReceiveBuffer _recvBuffer = new ReceiveBuffer(1024);
+        ReceiveBuffer _recvBuffer = new ReceiveBuffer(65535);
 
         object _lock = new object();
         Queue<ArraySegment<byte>> _sendQueue = new Queue<ArraySegment<byte>>();
@@ -79,12 +84,27 @@ namespace ServerCore
             RegisterReceive();
         }
 
+        public void Send(List<ArraySegment<byte>> sendBuffList)   // sendBuff를 queue에 모아서 보내는 방식
+        {
+            if (sendBuffList.Count == 0)    // pendingList가 빈 경우 OnSendCompleted에서 오류방지를 위해 return
+                return;
+
+            lock (_lock)
+            {
+                foreach(ArraySegment<byte> sendbuffer in sendBuffList)
+                    _sendQueue.Enqueue(sendbuffer);
+
+                if (_pendinglist.Count == 0)    // pendinglist의 내용물 값으로 pending여부 확인
+                    RegisterSend();
+            }
+        }
+
         public void Send(ArraySegment<byte> sendBuff)   // sendBuff를 queue에 모아서 보내는 방식
         {
             lock (_lock)
             {
                 _sendQueue.Enqueue(sendBuff);   
-                if (_pendinglist.Count == 0)    // pendinglist의 내용물 값으로 pending여부 확이
+                if (_pendinglist.Count == 0)    // pendinglist의 내용물 값으로 pending여부 확인
                     RegisterSend();
             }          
         }   

@@ -14,6 +14,6 @@ class PacketHandler
         ServerSession serverSession = session as ServerSession;
 
         //if (chatPacket.playerid == 1)
-            Console.WriteLine("Received message : " + chatPacket.chat);
+            //Console.WriteLine("Received message : " + chatPacket.chat);
     }
 }
