@@ -14,6 +14,12 @@ namespace Server_Base
         static Listener _listener = new Listener();
         public static GameRoom Room = new GameRoom();
 
+        static void FlushRoom()
+        {
+            Room.Push(() => Room.Flush());
+            JobTimer.Instance.Push(FlushRoom, 250);
+        }
+
         static void Main(string[] args)
         {         
             // DNS (Domain Name System) : 주소 이름으로 IP 찾는 방식
@@ -26,10 +32,12 @@ namespace Server_Base
             _listener.init(endPoint, () => { return SessionManager.instance.Generate(); });
             Console.WriteLine("Listening...");
 
+            //FlushRoom();
+            JobTimer.Instance.Push(FlushRoom);
+
             while (true)
             {
-                Room.Push(() => Room.Flush());
-                Thread.Sleep(250);  // 0.25초마다 Flush
+                JobTimer.Instance.Flush();
             }
         }
     }

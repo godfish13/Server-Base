@@ -24,7 +24,7 @@ namespace Server_Base
             foreach (ClientSession s in _sessions)  // JobQueue 내에서 lock을 잡고 움직이므로 lock 제거
                 s.Send(_pendingList);
 
-            Console.WriteLine($"Flushed {_pendingList.Count} Items");
+            //Console.WriteLine($"Flushed {_pendingList.Count} Items");
             _pendingList.Clear();
         }
 

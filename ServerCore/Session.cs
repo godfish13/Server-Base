@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ServerCore
 {
@@ -36,8 +37,8 @@ namespace ServerCore
                 buffer = new ArraySegment<byte>(buffer.Array, buffer.Offset + dataSize, buffer.Count - dataSize);              
             }
 
-            if (PacketCount > 1)
-                Console.WriteLine($"패킷 모아보내기 : {PacketCount}");
+            //if (PacketCount > 1)
+                //Console.WriteLine($"모아서 보낸 패킷 갯수 : {PacketCount}");
 
             return processLength;
         }

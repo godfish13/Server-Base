@@ -24,7 +24,7 @@ namespace Server_Base
 
             Connector connector = new Connector();
 
-            connector.Connect(endPoint, () => { return SessionManager.instance.Generate(); }, 200);
+            connector.Connect(endPoint, () => { return SessionManager.instance.Generate(); }, 10);
 
             while(true)
             {

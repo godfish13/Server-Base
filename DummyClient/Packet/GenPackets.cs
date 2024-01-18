@@ -14,7 +14,7 @@ public enum PacketIDEnum
 	
 }
 
-interface IPacket
+public interface IPacket
 {
     ushort Protocol { get; }
 	void ReadBuffer(ArraySegment<byte> segement);
