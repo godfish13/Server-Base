@@ -14,7 +14,7 @@ namespace PacketGenerator       // common/batch.exe 실행을 통해 GenPackets�
 using System;
 using System.Collections.Generic;
 
-class PacketManager
+public class PacketManager
 {{
     #region Singletone
     static PacketManager _instance = new PacketManager();
@@ -113,7 +113,7 @@ public interface IPacket
         public static string packetFormat =
 @"
 
-class {0} : IPacket
+public class {0} : IPacket
 {{
     {1}
 

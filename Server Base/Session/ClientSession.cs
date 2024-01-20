@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 namespace Server_Base       
 {
     class ClientSession : PacketSession // 실제로 각 상황에서 사용될 기능 구현     // Client에 앉혀둘 대리인
-    {
+    {                                         
         public int Sessionid { get; set; }
         public GameRoom Room { get; set; }
+        public float PosX { get; set; }
+        public float PosY { get; set; }
+        public float PosZ { get; set; }
 
         public override void OnConnected(EndPoint endPoint)
         {
@@ -20,7 +23,6 @@ namespace Server_Base
             Program.Room.Push(() => Program.Room.Enter(this));  // JobQueue에 등록
             //ToDo
         }
-        //[4][.] [I][D] [][][][][][][][]
         
         public override void OnReceivePacket(ArraySegment<byte> buffer)
         {

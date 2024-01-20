@@ -16,7 +16,7 @@ namespace Server_Base
 
         static void FlushRoom()
         {
-            Room.Push(() => Room.Flush());
+            Room.Push(() => Room.Flush());  // Room의 JobQueue에 pendingList에 저장된 작업들 등록
             JobTimer.Instance.Push(FlushRoom, 250);
         }
 

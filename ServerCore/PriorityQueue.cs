@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ServerCore
 {
-    public class PriorityQueue<T> where T : IComparable<T>
+    public class PriorityQueue<T> where T : IComparable<T>  // 우선순위 큐
     {
         List<T> _heap = new List<T>();
 

@@ -29,7 +29,7 @@ namespace Server_Base
         }
         public void Execute()
         {
-            _room.BroadCast(_session, _chat);
+            //_room.BroadCast(_session, _chat);
         }
     }
 
