@@ -67,7 +67,11 @@ namespace Server_Base
         public void Leave(ClientSession session)
         {           
             // 플레이어 제거
-            _sessions.Remove(session);      
+            //int index = _sessions.IndexOf(session);
+            //if (index != -1)
+                _sessions.Remove(session);
+            //else
+            //    Console.WriteLine($"{session.Sessionid} is not Founded");
             
             // 특정 유저 나갔다는 것을 방송
             S_BroadCastLeaveGame leave = new S_BroadCastLeaveGame();

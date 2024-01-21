@@ -18,7 +18,7 @@ namespace DummyClient
 
         public override void OnDisConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"OnDisConnected : {endPoint}");
+            Console.WriteLine($"OnDisConnected");
         }
 
         public override void OnReceivePacket(ArraySegment<byte> buffer)

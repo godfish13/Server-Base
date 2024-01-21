@@ -10,6 +10,11 @@ public class NetworkMgr : MonoBehaviour
 {
     ServerSession _session = new ServerSession();
 
+    public void Send(ArraySegment<byte> sendBuff)
+    {
+        _session.Send(sendBuff);
+    }
+
     void Start()
     {
         // DNS (Domain Name System) : 주소 이름으로 IP 찾는 방식
@@ -20,32 +25,20 @@ public class NetworkMgr : MonoBehaviour
 
         Connector connector = new Connector();
 
-        connector.Connect(endPoint, () => { return _session; }, 1);
-
-        StartCoroutine("CoSendPacket");
+        connector.Connect(endPoint, () => { return _session; });
     }
 
     void Update()
     {
-        IPacket packet = PacketQueue.Instance.Pop();
-        if (packet != null)
+        /*IPacket packet = PacketQueue.Instance.Pop();
+        if(packet != null) 
         {
             PacketManager.Instance.HandlePacket(_session, packet);
-        }
-    }
+        }*/
 
-    IEnumerator CoSendPacket()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(3.0f);
-
-            C_Chat chatPacket = new C_Chat();
-            chatPacket.chat = "Hi! Im Unity!";
-            ArraySegment<byte> segment = chatPacket.WriteBuffer();
-
-            _session.Send(segment);
-        }
+        List<IPacket> list = PacketQueue.Instance.PopAll();
+        foreach (IPacket packet in list)
+            PacketManager.Instance.HandlePacket(_session, packet);
     }
 
     private void OnApplicationQuit()

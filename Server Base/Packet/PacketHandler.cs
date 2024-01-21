@@ -30,9 +30,10 @@ class PacketHandler
         if (clientSession.Room == null)
             return;
 
-        Console.WriteLine($"{clientSession.Sessionid} : move to ({movePacket.posX}, {movePacket.posY}, {movePacket.posZ})");
+        //if(clientSession.Sessionid == 1)
+        //    Console.WriteLine($"{clientSession.Sessionid} : move to ({movePacket.posX}, {movePacket.posY}, {movePacket.posZ})");
 
         GameRoom room = clientSession.Room;    
-        room.Push(() => room.Move(clientSession, movePacket)); 
+        room.Push(() => room.Move(clientSession, movePacket));
     }
 }

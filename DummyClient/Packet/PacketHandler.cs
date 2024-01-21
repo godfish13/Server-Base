@@ -25,6 +25,6 @@ class PacketHandler
 
     public static void S_BroadCastMoveHandler(PacketSession session, IPacket packet)
     {
-        S_BroadCastMove pkt = packet as S_BroadCastMove;
+        S_BroadCastMove pkt = packet as S_BroadCastMove;       
     }
 }

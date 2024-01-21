@@ -28,7 +28,7 @@ namespace ServerCore
                     flush = _flush = true;
             }
 
-            if (flush = true)   // 위의 lock통과한 스레드만 실행시키므로 멀티스레드 걱정 x
+            if (flush)   // 위의 lock통과한 스레드만 실행시키므로 멀티스레드 걱정 x
             {
                 Flush();
             }
