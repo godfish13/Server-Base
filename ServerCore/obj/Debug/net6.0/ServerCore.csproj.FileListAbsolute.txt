@@ -9,3 +9,4 @@ C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.dll
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\refint\ServerCore.dll
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.pdb
 C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ref\ServerCore.dll
+C:\Unity_Server\Server Base\ServerCore\obj\Debug\net6.0\ServerCore.sourcelink.json

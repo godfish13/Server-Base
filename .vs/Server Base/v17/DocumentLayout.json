@@ -1,0 +1,231 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Unity_Server\\Server Base\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FF5C1532-62CD-4D77-B9AB-07E853043DE1}|PacketGenerator\\PacketGenerator\\PacketGenerator.csproj|c:\\unity_server\\server base\\packetgenerator\\packetgenerator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF5C1532-62CD-4D77-B9AB-07E853043DE1}|PacketGenerator\\PacketGenerator\\PacketGenerator.csproj|solutionrelative:packetgenerator\\packetgenerator\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\jobtimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\jobtimer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\taskqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\taskqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\gameroom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\gameroom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26157FB9-4083-4DF3-81AB-F28004364B86}|ServerCore\\ServerCore.csproj|c:\\unity_server\\server base\\servercore\\jobqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26157FB9-4083-4DF3-81AB-F28004364B86}|ServerCore\\ServerCore.csproj|solutionrelative:servercore\\jobqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\session\\clientsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\session\\clientsession.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26157FB9-4083-4DF3-81AB-F28004364B86}|ServerCore\\ServerCore.csproj|c:\\unity_server\\server base\\servercore\\listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26157FB9-4083-4DF3-81AB-F28004364B86}|ServerCore\\ServerCore.csproj|solutionrelative:servercore\\listener.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\packet\\packethandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\packet\\packethandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\gustk\\AppData\\Local\\SourceServer\\1b02a162f085d7e533dec454e4e9e37bc6e9b33517b4dc5d447eb38f7e7021bd\\src\\libraries\\System.Private.CoreLib\\src\\System\\ThrowHelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\packet\\serverpacketmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\packet\\serverpacketmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\session\\sessionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\session\\sessionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|c:\\unity_server\\server base\\server base\\packet\\genpackets.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C78BCB51-9351-401D-A5F9-82BF922A07B1}|Server Base\\Server Base.csproj|solutionrelative:server base\\packet\\genpackets.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "JobTimer.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\JobTimer.cs",
+              "RelativeDocumentMoniker": "Server Base\\JobTimer.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\JobTimer.cs",
+              "RelativeToolTip": "Server Base\\JobTimer.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADUAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:52:49.84Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ClientSession.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\Session\\ClientSession.cs",
+              "RelativeDocumentMoniker": "Server Base\\Session\\ClientSession.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\Session\\ClientSession.cs",
+              "RelativeToolTip": "Server Base\\Session\\ClientSession.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABYAAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:52:46.941Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "JobQueue.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\ServerCore\\JobQueue.cs",
+              "RelativeDocumentMoniker": "ServerCore\\JobQueue.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\ServerCore\\JobQueue.cs",
+              "RelativeToolTip": "ServerCore\\JobQueue.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAAB4AAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T12:09:40.617Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Listener.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\ServerCore\\Listener.cs",
+              "RelativeDocumentMoniker": "ServerCore\\Listener.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\ServerCore\\Listener.cs",
+              "RelativeToolTip": "ServerCore\\Listener.cs",
+              "ViewState": "AQIAACQAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T12:09:41.144Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\PacketGenerator\\PacketGenerator\\Program.cs",
+              "RelativeDocumentMoniker": "PacketGenerator\\PacketGenerator\\Program.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\PacketGenerator\\PacketGenerator\\Program.cs",
+              "RelativeToolTip": "PacketGenerator\\PacketGenerator\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T11:10:09.071Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "GenPackets.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\Packet\\GenPackets.cs",
+              "RelativeDocumentMoniker": "Server Base\\Packet\\GenPackets.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\Packet\\GenPackets.cs",
+              "RelativeToolTip": "Server Base\\Packet\\GenPackets.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvw8AAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:53:17.556Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TaskQueue.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\TaskQueue.cs",
+              "RelativeDocumentMoniker": "Server Base\\TaskQueue.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\TaskQueue.cs",
+              "RelativeToolTip": "Server Base\\TaskQueue.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:53:03.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\Program.cs",
+              "RelativeDocumentMoniker": "Server Base\\Program.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\Program.cs",
+              "RelativeToolTip": "Server Base\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:53:05.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GameRoom.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\GameRoom.cs",
+              "RelativeDocumentMoniker": "Server Base\\GameRoom.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\GameRoom.cs",
+              "RelativeToolTip": "Server Base\\GameRoom.cs",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAAADoAAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:52:48.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PacketHandler.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\Packet\\PacketHandler.cs",
+              "RelativeDocumentMoniker": "Server Base\\Packet\\PacketHandler.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\Packet\\PacketHandler.cs",
+              "RelativeToolTip": "Server Base\\Packet\\PacketHandler.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:53:15.779Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ThrowHelper.cs",
+              "DocumentMoniker": "C:\\Users\\gustk\\AppData\\Local\\SourceServer\\1b02a162f085d7e533dec454e4e9e37bc6e9b33517b4dc5d447eb38f7e7021bd\\src\\libraries\\System.Private.CoreLib\\src\\System\\ThrowHelper.cs",
+              "RelativeDocumentMoniker": "..\\..\\Users\\gustk\\AppData\\Local\\SourceServer\\1b02a162f085d7e533dec454e4e9e37bc6e9b33517b4dc5d447eb38f7e7021bd\\src\\libraries\\System.Private.CoreLib\\src\\System\\ThrowHelper.cs",
+              "ToolTip": "C:\\Users\\gustk\\AppData\\Local\\SourceServer\\1b02a162f085d7e533dec454e4e9e37bc6e9b33517b4dc5d447eb38f7e7021bd\\src\\libraries\\System.Private.CoreLib\\src\\System\\ThrowHelper.cs",
+              "RelativeToolTip": "..\\..\\Users\\gustk\\AppData\\Local\\SourceServer\\1b02a162f085d7e533dec454e4e9e37bc6e9b33517b4dc5d447eb38f7e7021bd\\src\\libraries\\System.Private.CoreLib\\src\\System\\ThrowHelper.cs",
+              "ViewState": "AQIAAFYAAAAAAAAAAAAgwGkAAABFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T11:44:02.887Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SessionManager.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\Session\\SessionManager.cs",
+              "RelativeDocumentMoniker": "Server Base\\Session\\SessionManager.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\Session\\SessionManager.cs",
+              "RelativeToolTip": "Server Base\\Session\\SessionManager.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:52:45.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ServerPacketManager.cs",
+              "DocumentMoniker": "C:\\Unity_Server\\Server Base\\Server Base\\Packet\\ServerPacketManager.cs",
+              "RelativeDocumentMoniker": "Server Base\\Packet\\ServerPacketManager.cs",
+              "ToolTip": "C:\\Unity_Server\\Server Base\\Server Base\\Packet\\ServerPacketManager.cs",
+              "RelativeToolTip": "Server Base\\Packet\\ServerPacketManager.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-21T10:53:15.108Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

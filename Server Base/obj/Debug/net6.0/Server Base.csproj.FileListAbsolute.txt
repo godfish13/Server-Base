@@ -10,9 +10,10 @@ C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.dll
 C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\Server Base.pdb
 C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\ServerCore.dll
 C:\Unity_Server\Server Base\Server Base\bin\Debug\net6.0\ServerCore.pdb
-C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.csproj.CopyComplete
 C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.dll
 C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\refint\Server Base.dll
 C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.pdb
 C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.genruntimeconfig.cache
 C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\ref\Server Base.dll
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server Base.sourcelink.json
+C:\Unity_Server\Server Base\Server Base\obj\Debug\net6.0\Server B.41FDEA39.Up2Date
